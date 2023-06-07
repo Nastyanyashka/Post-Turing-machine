@@ -20,9 +20,11 @@ namespace Post_Turing_machine
         List<bool> leftTape = new List<bool>(53);
         int currentPos = 0;
         int currentLine = 1;
-        private Dictionary<int,Actions> commands = new Dictionary<int,Actions>();
-        public Post_Machine() 
-        { 
+        private Dictionary<int,string> commands = new Dictionary<int, string>();
+        public Post_Machine(int startPos) 
+        {
+            commands.Add(0, "end");
+            currentPos = startPos;
             for(int i = 0;i<51;i++)
             {
                 rightTape.Add(false);
@@ -56,7 +58,7 @@ namespace Post_Turing_machine
             }
             else
             {
-                if (leftTape[currentPos] == false)
+                if (leftTape[Math.Abs(currentPos)] == false)
                 {
                     currentLine = lineIfZero;
                 }
@@ -67,7 +69,7 @@ namespace Post_Turing_machine
             }
             
         }
-        public void MarkCurrentPos()
+        public void MarkCurrentPos(int numOfLine)
         {
             if(currentPos >= 0)
             {
@@ -75,10 +77,11 @@ namespace Post_Turing_machine
             }
             if (currentPos < 0)
             {
-                rightTape[currentPos] = true;
+                leftTape[Math.Abs(currentPos)] = true;
             }
+            currentLine = numOfLine;
         }
-        public void CleanCurrentpos() 
+        public void CleanCurrentpos(int numOfLine) 
         {
             if (currentPos >= 0)
             {
@@ -86,8 +89,9 @@ namespace Post_Turing_machine
             }
             if (currentPos < 0)
             {
-                rightTape[currentPos] = false;
+                leftTape[Math.Abs(currentPos)] = false;
             }
+            currentLine = numOfLine;
         }
         public void MarkAllPositions()
         {
@@ -103,8 +107,42 @@ namespace Post_Turing_machine
                 }
             }
         }
-       public Dictionary<int,Actions> Commands { get {return commands; } set { commands = value; } }
+        public void Start()
+        {
+            string command = commands[1];
+            
+            while (true)
+            {
+                if (command[0]=='<')
+                {
+                    MoveLeft(command[2]-'0');
+                }
+                else if (command[0] == '>')
+                {
+                    MoveRight(command[2] - '0');
+                }
+                else if (command[0] == '?')
+                {
+                    If(command[2] - '0', command[4] - '0');
+                }
+                else if (command[0] == '1')
+                {
+                    MarkCurrentPos(command[2] - '0');
+                }
+                else if (command[0] == '0')
+                {
+                    CleanCurrentpos(command[2] - '0');
+                }
+                else if(command.Contains("end"))
+                {
+                    break;
+                }
+                command = commands[currentLine];
+            }
+        }
+       public Dictionary<int, string> Commands { get {return commands; } set { commands = value; } }
         public List<bool> RightTape { get { return rightTape; } set {  rightTape = value; } }
         public List<bool> LeftTape { get { return leftTape; } set { leftTape = value; } }
+        public int CurrentPos { get { return currentPos; } set {  currentPos = value; } }
     }
 }

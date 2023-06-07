@@ -7,7 +7,7 @@ using System.Windows.Forms;
 namespace Post_Turing_machine;
 public partial class Form1 : System.Windows.Forms.Form
 {
-    Post_Machine machine = new Post_Machine();
+    Post_Machine machine = new Post_Machine(-50);
     public Form1()
     {
         InitializeComponent();
@@ -51,7 +51,7 @@ public partial class Form1 : System.Windows.Forms.Form
             }
             pos += text[i];
         }
-        for (int i = posOfText; i<text.Length; i++)
+        for (int i = posOfText; i < text.Length; i++)
         {
             if (text[i] == ' ')
             {
@@ -93,5 +93,56 @@ public partial class Form1 : System.Windows.Forms.Form
     private void Form1_Load(object sender, EventArgs e)
     {
         SetupPanel();
+    }
+
+    private void toLeft_Click(object sender, EventArgs e)
+    {
+        if (Karetka.Location.X - 25 >= 0)
+        {
+            Karetka.Location = new Point(Karetka.Location.X - 25, Karetka.Location.Y);
+        }
+        machine.CurrentPos -= 1;
+    }
+
+    private void toRight_Click(object sender, EventArgs e)
+    {
+        if (Karetka.Location.X + 25 <= 2500)
+        {
+            Karetka.Location = new Point(Karetka.Location.X + 25, Karetka.Location.Y);
+        }
+        machine.CurrentPos += 1;
+    }
+
+    private void button1_Click(object sender, EventArgs e)
+    {
+        string input = textBox1.Text;
+        string tempCommand = "";
+        int counter = 1;
+        bool command = false;
+        foreach (char c in input)
+        {
+            if(c == '\r')
+            {
+                machine.Commands.Add(counter, tempCommand);
+                counter++;
+                tempCommand = "";
+                
+                continue; }
+            if(c == '\n') { continue; }
+            tempCommand += c;
+        }
+        machine.Commands.Add(counter, tempCommand);
+        machine.Start();
+        for(int i =50; i>0; i--)
+        {
+            if (machine.LeftTape[i] == false)
+            {
+                textBox2.Text += "0 ";
+            }
+            else
+            {
+                textBox2.Text += "1 ";
+            }
+        }
     }
 }
