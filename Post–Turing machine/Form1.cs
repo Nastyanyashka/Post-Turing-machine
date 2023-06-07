@@ -19,16 +19,13 @@ public partial class Form1 : System.Windows.Forms.Form
         Button button = new Button();
         for (int i = 0; i < 101; i++)
         {
-            Label label = new Label();
+            CoolLabel label = new CoolLabel();
             label.Text = (50 - i).ToString() + "   0";
             label.Location = new Point(2500 - i * 25, panel1.Location.Y / 2);
             label.Width = 25;
             label.Height = 30;
             label.Click += OnTapeClick;
-
-            //button.Text = "0";
-            //button.Location = new Point(2500 - i * 25, panel1.Location.Y / 2 + 20);
-            //button.Click += OnTapeClick;
+            machine.Notify += label.ChangeValue;
 
             panel1.Controls.Add(label);
         }
@@ -115,34 +112,96 @@ public partial class Form1 : System.Windows.Forms.Form
 
     private void button1_Click(object sender, EventArgs e)
     {
+        machine.Commands.Clear();
         string input = textBox1.Text;
         string tempCommand = "";
         int counter = 1;
-        bool command = false;
         foreach (char c in input)
         {
-            if(c == '\r')
+            if (c == '\r')
             {
                 machine.Commands.Add(counter, tempCommand);
                 counter++;
                 tempCommand = "";
-                
-                continue; }
-            if(c == '\n') { continue; }
+
+                continue;
+            }
+            if (c == '\n') { continue; }
             tempCommand += c;
         }
         machine.Commands.Add(counter, tempCommand);
         machine.Start();
-        for(int i =50; i>0; i--)
+        Karetka.Location = new Point((machine.CurrentPos + 50) * 25 + 7, Karetka.Location.Y);
+    }
+
+    private void button2_Click(object sender, EventArgs e)
+    {
+        OpenFileDialog openFileDialog = new OpenFileDialog();
+        openFileDialog.Filter = "Text files(*.txt)|*.txt";
+        if (openFileDialog.ShowDialog() == DialogResult.Cancel)
+            return;
+
+        StreamReader reader = new StreamReader(openFileDialog.FileName);
+        textBox1.Text = reader.ReadToEnd();
+        reader.Close();
+    }
+
+    private void button3_Click(object sender, EventArgs e)
+    {
+        SaveFileDialog saveFileDialog = new SaveFileDialog();
+        saveFileDialog.Filter = "Text files(*.txt)|*.txt";
+        if (saveFileDialog.ShowDialog() == DialogResult.Cancel)
+            return;
+
+        StreamWriter writer = new StreamWriter(saveFileDialog.FileName, false);
+        writer.Write(textBox1.Text);
+        writer.Close();
+    }
+
+    private void button4_Click(object sender, EventArgs e)
+    {
+        SaveFileDialog saveFileDialog = new SaveFileDialog();
+        saveFileDialog.Filter = "Post Files(*.pst)|*.pst";
+        if (saveFileDialog.ShowDialog() == DialogResult.Cancel)
+            return;
+
+
+        StreamWriter writer = new StreamWriter(saveFileDialog.FileName, false);
+
+        for (int i = -50; i < 0; i++)
         {
-            if (machine.LeftTape[i] == false)
-            {
-                textBox2.Text += "0 ";
-            }
-            else
-            {
-                textBox2.Text += "1 ";
-            }
+            writer.Write(Convert.ToInt32(machine.LeftTape[Math.Abs(i)]));
         }
+        for (int i = 0; i < 50; i++)
+        {
+            writer.Write(Convert.ToInt32(machine.RightTape[i]));
+        }
+        writer.WriteLine(machine.CurrentPos.ToString());
+
+        writer.WriteLine(textBox1.Text);
+        writer.Close();
+    }
+
+    private void button5_Click(object sender, EventArgs e)
+    {
+        OpenFileDialog openFileDialog = new OpenFileDialog();
+        openFileDialog.Filter = "Post Files(*.pst)|*.pst";
+        if (openFileDialog.ShowDialog() == DialogResult.Cancel)
+            return;
+
+        StreamReader reader = new StreamReader(openFileDialog.FileName);
+        for (int i = -50; i < 0; i++)
+        {
+            machine.LeftTape[Math.Abs(i)] = Convert.ToBoolean(reader.Read() - '0');
+        }
+        for (int i = 0; i < 50; i++)
+        {
+            machine.RightTape[i] = Convert.ToBoolean(reader.Read() - '0');
+        }
+        machine.CurrentPos = Convert.ToInt32(reader.ReadLine());
+        Karetka.Location = new Point((machine.CurrentPos + 50) * 25 + 7, Karetka.Location.Y);
+        machine.NotifyLabels();
+        textBox1.Text = reader.ReadToEnd();
+        reader.Close();
     }
 }

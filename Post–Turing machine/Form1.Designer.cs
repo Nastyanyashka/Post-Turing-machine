@@ -34,7 +34,11 @@
             toLeft = new Button();
             toRight = new Button();
             button1 = new Button();
-            textBox2 = new TextBox();
+            label1 = new Label();
+            button2 = new Button();
+            button3 = new Button();
+            button4 = new Button();
+            button5 = new Button();
             panel1.SuspendLayout();
             SuspendLayout();
             // 
@@ -44,7 +48,7 @@
             panel1.Controls.Add(Karetka);
             panel1.Location = new Point(12, 41);
             panel1.Name = "panel1";
-            panel1.Size = new Size(760, 100);
+            panel1.Size = new Size(760, 80);
             panel1.TabIndex = 2;
             // 
             // Karetka
@@ -59,7 +63,7 @@
             // 
             // textBox1
             // 
-            textBox1.Location = new Point(12, 360);
+            textBox1.Location = new Point(12, 246);
             textBox1.Multiline = true;
             textBox1.Name = "textBox1";
             textBox1.Size = new Size(760, 189);
@@ -87,7 +91,7 @@
             // 
             // button1
             // 
-            button1.Location = new Point(276, 219);
+            button1.Location = new Point(12, 127);
             button1.Name = "button1";
             button1.Size = new Size(75, 23);
             button1.TabIndex = 6;
@@ -95,27 +99,72 @@
             button1.UseVisualStyleBackColor = true;
             button1.Click += button1_Click;
             // 
-            // textBox2
+            // label1
             // 
-            textBox2.Location = new Point(19, 283);
-            textBox2.Multiline = true;
-            textBox2.Name = "textBox2";
-            textBox2.Size = new Size(746, 58);
-            textBox2.TabIndex = 7;
+            label1.AutoSize = true;
+            label1.Location = new Point(12, 228);
+            label1.Name = "label1";
+            label1.Size = new Size(77, 15);
+            label1.TabIndex = 7;
+            label1.Text = "Ввод команд";
+            // 
+            // button2
+            // 
+            button2.Location = new Point(516, 217);
+            button2.Name = "button2";
+            button2.Size = new Size(256, 23);
+            button2.TabIndex = 8;
+            button2.Text = "Загрузить команды из текстового файла";
+            button2.UseVisualStyleBackColor = true;
+            button2.Click += button2_Click;
+            // 
+            // button3
+            // 
+            button3.Location = new Point(516, 188);
+            button3.Name = "button3";
+            button3.Size = new Size(256, 23);
+            button3.TabIndex = 9;
+            button3.Text = "Загрузить команды в текствоый файл";
+            button3.UseVisualStyleBackColor = true;
+            button3.Click += button3_Click;
+            // 
+            // button4
+            // 
+            button4.Location = new Point(12, 162);
+            button4.Name = "button4";
+            button4.Size = new Size(211, 23);
+            button4.TabIndex = 10;
+            button4.Text = "Сохранить состояние машины";
+            button4.UseVisualStyleBackColor = true;
+            button4.Click += button4_Click;
+            // 
+            // button5
+            // 
+            button5.Location = new Point(12, 191);
+            button5.Name = "button5";
+            button5.Size = new Size(211, 23);
+            button5.TabIndex = 11;
+            button5.Text = "Загрузить состояние машины";
+            button5.UseVisualStyleBackColor = true;
+            button5.Click += button5_Click;
             // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(784, 561);
-            Controls.Add(textBox2);
+            ClientSize = new Size(784, 443);
+            Controls.Add(button5);
+            Controls.Add(button4);
+            Controls.Add(button3);
+            Controls.Add(button2);
+            Controls.Add(label1);
             Controls.Add(button1);
             Controls.Add(toRight);
             Controls.Add(toLeft);
             Controls.Add(textBox1);
             Controls.Add(panel1);
             Name = "Form1";
-            Text = "Form1";
+            Text = "Машина поста";
             Load += Form1_Load;
             panel1.ResumeLayout(false);
             panel1.PerformLayout();
@@ -131,6 +180,10 @@
         private Button toLeft;
         private Button toRight;
         private Button button1;
-        private TextBox textBox2;
+        private Label label1;
+        private Button button2;
+        private Button button3;
+        private Button button4;
+        private Button button5;
     }
 }
