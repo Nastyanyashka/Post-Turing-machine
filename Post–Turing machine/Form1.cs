@@ -1,34 +1,59 @@
 
 using System;
+using System.Diagnostics.Metrics;
 using System.Drawing;
 using System.Reflection.PortableExecutable;
 using System.Runtime.CompilerServices;
+using System.Security.Cryptography.X509Certificates;
 using System.Windows.Forms;
+using System.Windows.Input;
+
 namespace Post_Turing_machine;
 public partial class Form1 : System.Windows.Forms.Form
 {
     Post_Machine machine = new Post_Machine(-50);
+    int num;
+    int num2;
     public Form1()
     {
         InitializeComponent();
-
+        this.ActiveControl = toRight;
+        toLeft.FlatStyle = FlatStyle.Flat;
+        toLeft.FlatAppearance.BorderSize = 0;
+        toRight.FlatStyle = FlatStyle.Flat;
+        toRight.FlatAppearance.BorderSize = 0;
+        saveCommands.FlatStyle = FlatStyle.Flat;
+        saveCommands.FlatAppearance.BorderSize = 0;
+        loadCommands.FlatStyle = FlatStyle.Flat;
+        loadCommands.FlatAppearance.BorderSize = 0;
+        saveState.FlatStyle = FlatStyle.Flat;
+        saveState.FlatAppearance.BorderSize = 0;
+        loadState.FlatStyle = FlatStyle.Flat;
+        loadState.FlatAppearance.BorderSize = 0;
+        startButton.FlatStyle = FlatStyle.Flat;
+        startButton.FlatAppearance.BorderSize = 0;
+        double multiplayer = 25 / (double)7;
+        num2 = Convert.ToInt32((num / 100) / multiplayer);
     }
 
     void SetupPanel()
     {
+        double multiplayer = 2500 / (double)770;
+        num = Convert.ToInt32(multiplayer * panel1.Width);
         Button button = new Button();
         for (int i = 0; i < 101; i++)
         {
             CoolLabel label = new CoolLabel();
             label.Text = (50 - i).ToString() + "   0";
-            label.Location = new Point(2500 - i * 25, panel1.Location.Y / 2);
-            label.Width = 25;
-            label.Height = 30;
+            label.Location = new Point(num - i * (num / 100), panel1.Location.Y / 2);
+            label.Width = num / 100+Convert.ToInt32(multiplayer);
+            label.Height = panel1.Height / 2;
             label.Click += OnTapeClick;
             machine.Notify += label.ChangeValue;
 
             panel1.Controls.Add(label);
         }
+        Karetka.Location = new Point(num-100*(num/100) + Convert.ToInt32((num / 100) / (25 / (double)7)), 0 );
     }
 
 
@@ -94,26 +119,26 @@ public partial class Form1 : System.Windows.Forms.Form
 
     private void toLeft_Click(object sender, EventArgs e)
     {
-        if (Karetka.Location.X - 25 >= 0)
+        if (Karetka.Location.X - num / 100 >= 0)
         {
-            Karetka.Location = new Point(Karetka.Location.X - 25, Karetka.Location.Y);
+            Karetka.Location = new Point(Karetka.Location.X - num / 100, Karetka.Location.Y);
         }
         machine.CurrentPos -= 1;
     }
 
     private void toRight_Click(object sender, EventArgs e)
     {
-        if (Karetka.Location.X + 25 <= 2500)
+        if (Karetka.Location.X + num / 100 <= num)
         {
-            Karetka.Location = new Point(Karetka.Location.X + 25, Karetka.Location.Y);
+            Karetka.Location = new Point(Karetka.Location.X + num / 100, Karetka.Location.Y);
         }
         machine.CurrentPos += 1;
     }
 
-    private void button1_Click(object sender, EventArgs e)
+    private void startButton_Click(object sender, EventArgs e)
     {
         machine.Commands.Clear();
-        string input = textBox1.Text;
+        string input = commands.Text;
         string tempCommand = "";
         int counter = 1;
         foreach (char c in input)
@@ -131,10 +156,10 @@ public partial class Form1 : System.Windows.Forms.Form
         }
         machine.Commands.Add(counter, tempCommand);
         machine.Start();
-        Karetka.Location = new Point((machine.CurrentPos + 50) * 25 + 7, Karetka.Location.Y);
+        Karetka.Location = new Point((machine.CurrentPos + 50) * (num / 100) + num2, Karetka.Location.Y);
     }
 
-    private void button2_Click(object sender, EventArgs e)
+    private void loadCommands_Click(object sender, EventArgs e)
     {
         OpenFileDialog openFileDialog = new OpenFileDialog();
         openFileDialog.Filter = "Text files(*.txt)|*.txt";
@@ -142,11 +167,11 @@ public partial class Form1 : System.Windows.Forms.Form
             return;
 
         StreamReader reader = new StreamReader(openFileDialog.FileName);
-        textBox1.Text = reader.ReadToEnd();
+        commands.Text = reader.ReadToEnd();
         reader.Close();
     }
 
-    private void button3_Click(object sender, EventArgs e)
+    private void saveCommands_Click(object sender, EventArgs e)
     {
         SaveFileDialog saveFileDialog = new SaveFileDialog();
         saveFileDialog.Filter = "Text files(*.txt)|*.txt";
@@ -154,11 +179,11 @@ public partial class Form1 : System.Windows.Forms.Form
             return;
 
         StreamWriter writer = new StreamWriter(saveFileDialog.FileName, false);
-        writer.Write(textBox1.Text);
+        writer.Write(commands.Text);
         writer.Close();
     }
 
-    private void button4_Click(object sender, EventArgs e)
+    private void saveState_Click(object sender, EventArgs e)
     {
         SaveFileDialog saveFileDialog = new SaveFileDialog();
         saveFileDialog.Filter = "Post Files(*.pst)|*.pst";
@@ -178,11 +203,11 @@ public partial class Form1 : System.Windows.Forms.Form
         }
         writer.WriteLine(machine.CurrentPos.ToString());
 
-        writer.WriteLine(textBox1.Text);
+        writer.WriteLine(commands.Text);
         writer.Close();
     }
 
-    private void button5_Click(object sender, EventArgs e)
+    private void loadState_Click(object sender, EventArgs e)
     {
         OpenFileDialog openFileDialog = new OpenFileDialog();
         openFileDialog.Filter = "Post Files(*.pst)|*.pst";
@@ -199,9 +224,104 @@ public partial class Form1 : System.Windows.Forms.Form
             machine.RightTape[i] = Convert.ToBoolean(reader.Read() - '0');
         }
         machine.CurrentPos = Convert.ToInt32(reader.ReadLine());
-        Karetka.Location = new Point((machine.CurrentPos + 50) * 25 + 7, Karetka.Location.Y);
+        Karetka.Location = new Point((machine.CurrentPos + 50) * (100/num) + num2, Karetka.Location.Y);
         machine.NotifyLabels();
-        textBox1.Text = reader.ReadToEnd();
+        commands.Text = reader.ReadToEnd();
         reader.Close();
+    }
+
+    private void commands_Changed(object sender, EventArgs e)
+    {
+
+        string input = commands.Text;
+        if (input == "")
+        {
+            startButton.Enabled = false;
+            return;
+        }
+        string tempCommand = "";
+        int counter = 1;
+        foreach (char c in input)
+        {
+            if (c == '\r')
+            {
+                counter++;
+                if (inputValidation(tempCommand) == false)
+                {
+                    startButton.Enabled = false;
+                    MessageBox.Show("Неверено введена команда");
+                    return;
+                }
+                tempCommand = "";
+                continue;
+            }
+            if (c == '\n') { continue; }
+            tempCommand += c;
+        }
+        if (inputValidation(tempCommand) == false)
+        {
+            startButton.Enabled = false;
+            MessageBox.Show("Неверено введена команда");
+            return;
+        }
+        startButton.Enabled = true;
+    }
+    private bool inputValidation(string input)
+    {
+        if (input == "")
+        {
+            return true;
+        }
+        if (input.Length < 3)
+        {
+            return false;
+        }
+        int value = 0;
+        if (input[0] == '<' || input[0] == '>' || input[0] == '?' || input[0] == '1' || input[0] == '0')
+        {
+            if (input[1] == ' ')
+            {
+                if (input[0] == '?')
+                {
+                    try
+                    {
+                        for (int i = 2; i < input.Length; i++)
+                        {
+                            if (input[i] == ',')
+                            {
+                                continue;
+                            }
+                            value = Convert.ToInt32(input[i]);
+                        }
+                        return true;
+                    }
+                    catch (Exception e)
+                    {
+                        MessageBox.Show(e.Message);
+                    }
+                }
+                else
+                {
+                    try
+                    {
+                        for (int i = 2; i < input.Length; i++)
+                        {
+                            value = Convert.ToInt32(input[i]);
+                        }
+                        return true;
+                    }
+                    catch (Exception e)
+                    {
+                        MessageBox.Show(e.Message);
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    private void Form1_Click(object sender, EventArgs e)
+    {
+        this.ActiveControl = toRight;
     }
 }

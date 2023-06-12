@@ -28,18 +28,22 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             panel1 = new Panel();
             Karetka = new Label();
-            textBox1 = new TextBox();
+            commands = new TextBox();
             toLeft = new Button();
             toRight = new Button();
-            button1 = new Button();
+            startButton = new Button();
             label1 = new Label();
-            button2 = new Button();
-            button3 = new Button();
-            button4 = new Button();
-            button5 = new Button();
+            loadCommands = new Button();
+            saveCommands = new Button();
+            saveState = new Button();
+            loadState = new Button();
+            groupBox1 = new GroupBox();
+            label2 = new Label();
             panel1.SuspendLayout();
+            groupBox1.SuspendLayout();
             SuspendLayout();
             // 
             // panel1
@@ -48,7 +52,7 @@
             panel1.Controls.Add(Karetka);
             panel1.Location = new Point(12, 41);
             panel1.Name = "panel1";
-            panel1.Size = new Size(760, 80);
+            panel1.Size = new Size(770, 80);
             panel1.TabIndex = 2;
             // 
             // Karetka
@@ -61,43 +65,50 @@
             Karetka.TabIndex = 0;
             Karetka.Text = "↓";
             // 
-            // textBox1
+            // commands
             // 
-            textBox1.Location = new Point(12, 246);
-            textBox1.Multiline = true;
-            textBox1.Name = "textBox1";
-            textBox1.Size = new Size(760, 189);
-            textBox1.TabIndex = 3;
+            commands.Location = new Point(12, 246);
+            commands.Multiline = true;
+            commands.Name = "commands";
+            commands.Size = new Size(473, 232);
+            commands.TabIndex = 3;
+            commands.Leave += commands_Changed;
             // 
             // toLeft
             // 
+            toLeft.BackColor = Color.FromArgb(179, 97, 79);
+            toLeft.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point);
             toLeft.Location = new Point(12, 12);
             toLeft.Name = "toLeft";
             toLeft.Size = new Size(75, 23);
             toLeft.TabIndex = 4;
             toLeft.Text = "Влево";
-            toLeft.UseVisualStyleBackColor = true;
+            toLeft.UseVisualStyleBackColor = false;
             toLeft.Click += toLeft_Click;
             // 
             // toRight
             // 
-            toRight.Location = new Point(697, 12);
+            toRight.BackColor = Color.FromArgb(179, 97, 79);
+            toRight.ForeColor = SystemColors.ControlText;
+            toRight.Location = new Point(707, 12);
             toRight.Name = "toRight";
             toRight.Size = new Size(75, 23);
             toRight.TabIndex = 5;
             toRight.Text = "Вправо";
-            toRight.UseVisualStyleBackColor = true;
+            toRight.UseVisualStyleBackColor = false;
             toRight.Click += toRight_Click;
             // 
-            // button1
+            // startButton
             // 
-            button1.Location = new Point(12, 127);
-            button1.Name = "button1";
-            button1.Size = new Size(75, 23);
-            button1.TabIndex = 6;
-            button1.Text = "Старт";
-            button1.UseVisualStyleBackColor = true;
-            button1.Click += button1_Click;
+            startButton.BackColor = Color.FromArgb(179, 97, 79);
+            startButton.Enabled = false;
+            startButton.Location = new Point(12, 127);
+            startButton.Name = "startButton";
+            startButton.Size = new Size(75, 23);
+            startButton.TabIndex = 6;
+            startButton.Text = "Старт";
+            startButton.UseVisualStyleBackColor = false;
+            startButton.Click += startButton_Click;
             // 
             // label1
             // 
@@ -108,66 +119,95 @@
             label1.TabIndex = 7;
             label1.Text = "Ввод команд";
             // 
-            // button2
+            // loadCommands
             // 
-            button2.Location = new Point(516, 217);
-            button2.Name = "button2";
-            button2.Size = new Size(256, 23);
-            button2.TabIndex = 8;
-            button2.Text = "Загрузить команды из текстового файла";
-            button2.UseVisualStyleBackColor = true;
-            button2.Click += button2_Click;
+            loadCommands.BackColor = Color.FromArgb(148, 129, 111);
+            loadCommands.Location = new Point(229, 191);
+            loadCommands.Name = "loadCommands";
+            loadCommands.Size = new Size(256, 23);
+            loadCommands.TabIndex = 8;
+            loadCommands.Text = "Загрузить команды из текстового файла";
+            loadCommands.UseVisualStyleBackColor = false;
+            loadCommands.Click += loadCommands_Click;
             // 
-            // button3
+            // saveCommands
             // 
-            button3.Location = new Point(516, 188);
-            button3.Name = "button3";
-            button3.Size = new Size(256, 23);
-            button3.TabIndex = 9;
-            button3.Text = "Загрузить команды в текствоый файл";
-            button3.UseVisualStyleBackColor = true;
-            button3.Click += button3_Click;
+            saveCommands.BackColor = Color.FromArgb(148, 129, 111);
+            saveCommands.Location = new Point(229, 162);
+            saveCommands.Name = "saveCommands";
+            saveCommands.Size = new Size(256, 23);
+            saveCommands.TabIndex = 9;
+            saveCommands.Text = "Загрузить команды в текствоый файл";
+            saveCommands.UseVisualStyleBackColor = false;
+            saveCommands.Click += saveCommands_Click;
             // 
-            // button4
+            // saveState
             // 
-            button4.Location = new Point(12, 162);
-            button4.Name = "button4";
-            button4.Size = new Size(211, 23);
-            button4.TabIndex = 10;
-            button4.Text = "Сохранить состояние машины";
-            button4.UseVisualStyleBackColor = true;
-            button4.Click += button4_Click;
+            saveState.BackColor = Color.FromArgb(148, 129, 111);
+            saveState.Location = new Point(12, 162);
+            saveState.Name = "saveState";
+            saveState.Size = new Size(211, 23);
+            saveState.TabIndex = 10;
+            saveState.Text = "Сохранить состояние машины";
+            saveState.UseVisualStyleBackColor = false;
+            saveState.Click += saveState_Click;
             // 
-            // button5
+            // loadState
             // 
-            button5.Location = new Point(12, 191);
-            button5.Name = "button5";
-            button5.Size = new Size(211, 23);
-            button5.TabIndex = 11;
-            button5.Text = "Загрузить состояние машины";
-            button5.UseVisualStyleBackColor = true;
-            button5.Click += button5_Click;
+            loadState.BackColor = Color.FromArgb(148, 129, 111);
+            loadState.Location = new Point(12, 191);
+            loadState.Name = "loadState";
+            loadState.Size = new Size(211, 23);
+            loadState.TabIndex = 11;
+            loadState.Text = "Загрузить состояние машины";
+            loadState.UseVisualStyleBackColor = false;
+            loadState.Click += loadState_Click;
+            // 
+            // groupBox1
+            // 
+            groupBox1.Controls.Add(label2);
+            groupBox1.Location = new Point(491, 127);
+            groupBox1.Name = "groupBox1";
+            groupBox1.Size = new Size(291, 351);
+            groupBox1.TabIndex = 12;
+            groupBox1.TabStop = false;
+            groupBox1.Text = "Правила использования";
+            // 
+            // label2
+            // 
+            label2.AutoSize = true;
+            label2.Location = new Point(6, 19);
+            label2.Name = "label2";
+            label2.Size = new Size(279, 315);
+            label2.TabIndex = 0;
+            label2.Text = resources.GetString("label2.Text");
             // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(784, 443);
-            Controls.Add(button5);
-            Controls.Add(button4);
-            Controls.Add(button3);
-            Controls.Add(button2);
+            BackColor = Color.FromArgb(232, 217, 186);
+            ClientSize = new Size(793, 490);
+            Controls.Add(groupBox1);
+            Controls.Add(loadState);
+            Controls.Add(saveState);
+            Controls.Add(saveCommands);
+            Controls.Add(loadCommands);
             Controls.Add(label1);
-            Controls.Add(button1);
+            Controls.Add(startButton);
             Controls.Add(toRight);
             Controls.Add(toLeft);
-            Controls.Add(textBox1);
+            Controls.Add(commands);
             Controls.Add(panel1);
+            ForeColor = SystemColors.ControlText;
             Name = "Form1";
             Text = "Машина поста";
             Load += Form1_Load;
+            Click += Form1_Click;
             panel1.ResumeLayout(false);
             panel1.PerformLayout();
+            groupBox1.ResumeLayout(false);
+            groupBox1.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -175,15 +215,17 @@
         #endregion
 
         private Panel panel1;
-        private TextBox textBox1;
+        private TextBox commands;
         private Label Karetka;
         private Button toLeft;
         private Button toRight;
-        private Button button1;
+        private Button startButton;
         private Label label1;
-        private Button button2;
-        private Button button3;
-        private Button button4;
-        private Button button5;
+        private Button loadCommands;
+        private Button saveCommands;
+        private Button saveState;
+        private Button loadState;
+        private GroupBox groupBox1;
+        private Label label2;
     }
 }
